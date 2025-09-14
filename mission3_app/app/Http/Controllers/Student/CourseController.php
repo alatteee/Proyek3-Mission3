@@ -12,18 +12,34 @@ class CourseController extends Controller
     public function index(Request $request)
     {
         $q = trim($request->get('q', ''));
+
         $courses = Course::query()
-            ->when($q, fn($qr) => $qr->where('course_code','like',"%$q%")
-                                    ->orWhere('course_name','like',"%$q%"))
+            ->when($q, fn($qr) => $qr->where(function($s) use ($q) {
+                $s->where('course_code','like',"%$q%")
+                ->orWhere('course_name','like',"%$q%");
+            }))
             ->orderBy('course_code')
             ->paginate(10)
             ->withQueryString();
 
         $student = $request->user()->student;
+
+        // id course yang SUDAH di-enroll student (untuk badge "Enrolled")
         $enrolledIds = $student?->courses()->pluck('courses.id')->toArray() ?? [];
 
-        return view('student.courses.index', compact('courses','enrolledIds','q'));
+        // map: course_id => model (punya pivot letter/score/grade_point)
+        $my = $student
+            ? $student->courses()
+                ->select('courses.id')
+                ->withPivot(['letter','score','grade_point'])
+                ->get()
+                ->keyBy('id')
+            : collect();
+
+        return view('student.courses.index', compact('courses','q','my','enrolledIds'));
     }
+
+
 
     // daftar course yang sudah diambil
     public function mine(Request $request)

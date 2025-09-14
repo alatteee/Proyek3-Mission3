@@ -64,10 +64,17 @@ class CourseController extends Controller
         return redirect()->route('admin.courses.index')->with('ok','Course deleted');
     }
 
-    public function show(\App\Models\Course $course)
+    public function show(Course $course)
     {
-        return view('admin.courses.show', compact('course'));
+        // paginate di relasi many-to-many + bawa relasi user agar bisa tampilkan nama
+        $students = $course->students()
+            ->with('user')          // akses $s->user->full_name / email
+            ->orderBy('student_id')         
+            ->paginate(15)
+            ->withQueryString();
+
+        return view('admin.courses.show', compact('course', 'students'));
     }
 
-
+    
 }

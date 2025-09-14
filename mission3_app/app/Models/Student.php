@@ -25,7 +25,15 @@ class Student extends Model
     public function courses()
     {
         return $this->belongsToMany(Course::class, 'takes', 'student_id', 'course_id')
-            ->withPivot(['enroll_date'])
+            ->withPivot(['enroll_date', 'score', 'letter', 'grade_point'])
             ->withTimestamps();
+    }
+
+    protected $appends = ['full_name']; // agar ikut ter-serialize (opsional)
+
+
+    public function getFullNameAttribute()
+    {
+        return $this->user->full_name ?? $this->user->username ?? null;
     }
 }

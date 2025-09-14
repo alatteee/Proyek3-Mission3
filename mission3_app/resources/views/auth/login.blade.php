@@ -1,6 +1,7 @@
 <x-layouts.auth title="Login">
   <h1 class="text-2xl font-bold text-slate-800 mb-6">Welcome back</h1>
 
+
   <form method="POST" action="{{ route('login') }}" class="space-y-4">
     @csrf
 
@@ -9,6 +10,9 @@
       <input type="email" name="email" required autofocus
         class="mt-1 block w-full rounded-lg border-slate-300 shadow-sm
                focus:border-blue-600 focus:ring-blue-600">
+      @error('email')
+        <p class="mt-1 text-sm text-rose-600">{{ $message }}</p>
+      @enderror
     </div>
 
     <div>
@@ -16,6 +20,9 @@
       <input type="password" name="password" required
         class="mt-1 block w-full rounded-lg border-slate-300 shadow-sm
                focus:border-blue-600 focus:ring-blue-600">
+          @error('password')
+            <p class="mt-1 text-sm text-rose-600">{{ $message }}</p>
+          @enderror
     </div>
 
     <div class="flex items-center justify-between text-sm">

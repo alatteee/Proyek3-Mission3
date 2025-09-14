@@ -31,11 +31,15 @@
             <td class="px-4 py-3 font-mono">{{ $c->course_code }}</td>
             <td class="px-4 py-3">{{ $c->course_name }}</td>
             <td class="px-4 py-3">{{ $c->credits }} SKS</td>
-            <td class="px-4 py-3">{{ $c->semester }}</td>
+            <td class="px-4 py-3">{{ $c->semester ?? '—' }}</td>
             <td class="px-4 py-3">
               <div class="flex justify-end">
+                @php $mine = isset($my) ? $my->get($c->id) : null; @endphp
+
                 @if(in_array($c->id, $enrolledIds))
-                  <span class="rounded-lg bg-emerald-50 px-3 py-1.5 text-emerald-700">Enrolled</span>
+                  <span class="rounded-lg bg-emerald-50 px-3 py-1.5 text-emerald-700">
+                    Enrolled{{ $mine && $mine->pivot->letter ? ' ('.$mine->pivot->letter.')' : '' }}
+                  </span>
                 @else
                   <form method="post" action="{{ route('student.courses.enroll',$c) }}">
                     @csrf
@@ -50,6 +54,7 @@
         @endforeach
       </tbody>
     </table>
+
     <div class="p-4">{{ $courses->links() }}</div>
   </div>
 </x-student.layout>

@@ -3,9 +3,9 @@
     @csrf
     <x-admin.form-card title="Course Details" subtitle="Lengkapi informasi mata kuliah.">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-        <x-admin.field label="Course Code" for="code" :error="$errors->first('code')">
-          <input id="code" name="code" type="text" required
-                 value="{{ old('code') }}"
+        <x-admin.field label="Course Code" for="course_code" :error="$errors->first('course_code')">
+          <input id="course_code" name="course_code" type="text" required
+                 value="{{ old('course_code') }}"
                  class="w-full rounded-xl border-slate-300 focus:border-indigo-500 focus:ring-indigo-500"/>
         </x-admin.field>
 
@@ -15,16 +15,16 @@
                  class="w-full rounded-xl border-slate-300 focus:border-indigo-500 focus:ring-indigo-500"/>
         </x-admin.field>
 
-        <x-admin.field label="Course Name" for="name" :error="$errors->first('name')" class="md:col-span-2">
-          <input id="name" name="name" type="text" required
-                 value="{{ old('name') }}"
+        <x-admin.field label="Course Name" for="course_name" :error="$errors->first('course_name')" class="md:col-span-2">
+          <input id="course_name" name="course_name" type="text" required
+                 value="{{ old('course_name') }}"
                  class="w-full rounded-xl border-slate-300 focus:border-indigo-500 focus:ring-indigo-500"/>
         </x-admin.field>
 
         <x-admin.field label="Semester" for="semester" :error="$errors->first('semester')">
           <select id="semester" name="semester"
                   class="w-full rounded-xl border-slate-300 focus:border-indigo-500 focus:ring-indigo-500">
-            <option value="" disabled {{ old('semester') ? '' : 'selected' }}>Pilih semester</option>
+            <option value="" {{ old('semester') ? '' : 'selected' }}>—</option>
             <option value="Ganjil"  @selected(old('semester')==='Ganjil')>Ganjil</option>
             <option value="Genap"   @selected(old('semester')==='Genap')>Genap</option>
           </select>

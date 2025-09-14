@@ -12,6 +12,7 @@
           <th class="px-4 py-3 text-left font-semibold">Code</th>
           <th class="px-4 py-3 text-left font-semibold">Name</th>
           <th class="px-4 py-3 text-left font-semibold">Enrolled At</th>
+          <th class="px-4 py-3 text-left font-semibold">Grade</th>
           <th class="px-4 py-3 text-right font-semibold">Action</th>
         </tr>
       </thead>
@@ -21,6 +22,20 @@
             <td class="px-4 py-3 font-mono">{{ $c->course_code }}</td>
             <td class="px-4 py-3">{{ $c->course_name }}</td>
             <td class="px-4 py-3">{{ \Illuminate\Support\Carbon::parse($c->pivot->enroll_date)->format('d M Y') }}</td>
+            <td class="px-4 py-3">
+              @if($c->pivot->letter)
+                <span class="inline-flex items-center gap-2">
+                  <span class="rounded-full bg-blue-100 px-2 py-0.5 text-blue-700 text-xs font-semibold">
+                    {{ $c->pivot->letter }}
+                  </span>
+                  <span class="text-slate-600 text-sm">
+                    {{ $c->pivot->score ?? '—' }} / {{ number_format($c->pivot->grade_point,2) }}
+                  </span>
+                </span>
+              @else
+                <span class="text-slate-400">—</span>
+              @endif
+            </td>
             <td class="px-4 py-3">
               <div class="flex justify-end">
                 <form method="post" action="{{ route('student.courses.drop',$c) }}"

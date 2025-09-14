@@ -33,7 +33,15 @@ Route::middleware(['auth', 'role:admin'])
 
         Route::resource('courses', CourseController::class);   
         Route::resource('students', StudentController::class); 
+        Route::post('/students/{student}/enroll', [\App\Http\Controllers\Admin\StudentController::class, 'enroll'])
+        ->name('students.enroll');
 
+        Route::delete('/students/{student}/unenroll/{course}', [\App\Http\Controllers\Admin\StudentController::class, 'unenroll'])
+            ->name('students.unenroll');
+        
+        Route::patch('students/{student}/grade/{course}',
+                [\App\Http\Controllers\Admin\StudentController::class, 'saveGrade']
+            )->name('students.grade');   
     });
 
 // BENAR

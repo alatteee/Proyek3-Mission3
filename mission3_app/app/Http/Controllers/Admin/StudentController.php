@@ -7,6 +7,7 @@ use App\Models\Student;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use App\Models\Course;
 
 class StudentController extends Controller
 {
@@ -128,8 +129,83 @@ class StudentController extends Controller
 
     public function show(\App\Models\Student $student)
     {
-        $student->load('user'); // kalau mau tampilkan info akun user
-        return view('admin.students.show', compact('student'));
+        $student->load('user');
+
+        $courses = $student->courses()
+            ->orderBy('course_code')
+            ->paginate(10)
+            ->withQueryString();
+
+        // daftar course yang BELUM diambil student (untuk dropdown quick enroll)
+        $availableCourses = \App\Models\Course::whereDoesntHave('students', function ($q) use ($student) {
+            $q->where('students.student_id', $student->student_id);
+        })->orderBy('course_code')->get();
+
+        return view('admin.students.show', compact('student', 'courses', 'availableCourses'));
     }
+
+
+    public function enroll(\Illuminate\Http\Request $request, \App\Models\Student $student)
+    {
+        $data = $request->validate(['course_id' => ['required','exists:courses,id']]);
+        $student->courses()->syncWithoutDetaching([$data['course_id'] => ['enroll_date' => now()]]);
+        return back()->with('ok','Student enrolled to course.');
+    }
+
+    public function unenroll(\App\Models\Student $student, \App\Models\Course $course)
+    {
+        $student->courses()->detach($course->id);
+        return back()->with('ok','Student unenrolled from course.');
+    }
+
+    public function saveGrade(Request $request, Student $student, Course $course)
+    {
+        $data = $request->validate([
+            'score'  => ['nullable','integer','between:0,100'],
+            'letter' => ['nullable','in:A,AB,B,BC,C,D,E'], 
+        ]);
+
+        // hitung otomatis letter & point kalau admin isi score
+        $letter = $data['letter'] ?? $this->letterFromScore($data['score']);
+        $point  = $this->pointFromLetter($letter);
+
+        $student->courses()->updateExistingPivot($course->id, [
+            'score'       => $data['score'],
+            'letter'      => $letter,
+            'grade_point' => $point,
+        ]);
+
+        return back()->with('ok', 'Grade saved.');
+    }
+
+    private function letterFromScore(?int $s): ?string
+    {
+        if ($s === null) return null;
+        return match (true) {
+            $s >= 85 => 'A',
+            $s >= 80 => 'AB',
+            $s >= 75 => 'B',
+            $s >= 70 => 'BC',
+            $s >= 65 => 'C',
+            $s >= 60 => 'D',
+            default  => 'E',
+        };
+    }
+
+    private function pointFromLetter(?string $L): ?float
+    {
+        return match ($L) {
+            'A'  => 4.00,
+            'AB' => 3.50,
+            'B'  => 3.00,
+            'BC' => 2.50,
+            'C'  => 2.00,
+            'D'  => 1.00,
+            'E'  => 0.00,
+            default => null,
+        };
+    }
+
+
 
 }
