@@ -288,5 +288,85 @@ confirmLogoutBtn?.addEventListener('click', () => {
   logoutForm.submit();
 });
 
+// ===== Bulk Actions (Students) with Confirmation =====
+const checkAllStudents = document.querySelector('#checkAllStudents');
+const studentChecks = document.querySelectorAll('.student-check');
+const bulkBtn = document.querySelector('#bulkActionApply');
+const bulkSelect = document.querySelector('#bulkActionSelect');
 
+const bulkModal = document.querySelector('#bulkModal');
+const bulkMsg = document.querySelector('#bulkMessage');
+const cancelBulkBtn = document.querySelector('#cancelBulkBtn');
+const okBulkBtn = document.querySelector('#okBulkBtn');
+let bulkData = null; // simpan data sebelum submit
+
+checkAllStudents?.addEventListener('change', e => {
+  studentChecks.forEach(chk => chk.checked = e.target.checked);
+});
+
+bulkBtn?.addEventListener('click', () => {
+  const action = bulkSelect.value;
+  const ids = Array.from(studentChecks)
+                   .filter(chk => chk.checked)
+                   .map(chk => chk.value);
+
+  if (!action) {
+    alert("Pilih action dulu.");
+    return;
+  }
+  if (ids.length === 0) {
+    alert("Pilih minimal 1 mahasiswa.");
+    return;
+  }
+
+  let actionText = '';
+  if (action === 'delete') actionText = 'hapus';
+  if (action === 'activate') actionText = 'aktifkan';
+  if (action === 'deactivate') actionText = 'nonaktifkan';
+
+  bulkMsg.textContent = `Yakin ingin ${actionText} ${ids.length} mahasiswa terpilih?`;
+  bulkModal.classList.remove('hidden');
+
+  bulkData = { action, ids };
+});
+
+cancelBulkBtn?.addEventListener('click', () => {
+  bulkModal.classList.add('hidden');
+  bulkData = null;
+});
+
+okBulkBtn?.addEventListener('click', () => {
+  if (!bulkData) return;
+
+  const form = document.createElement('form');
+  form.method = 'POST';
+  form.action = '/admin/students/bulk-action';
+
+  // CSRF
+  const token = document.querySelector('meta[name="csrf-token"]').content;
+  const csrf = document.createElement('input');
+  csrf.type = 'hidden';
+  csrf.name = '_token';
+  csrf.value = token;
+  form.appendChild(csrf);
+
+  // action
+  const act = document.createElement('input');
+  act.type = 'hidden';
+  act.name = 'action';
+  act.value = bulkData.action;
+  form.appendChild(act);
+
+  // ids
+  bulkData.ids.forEach(id => {
+    const hidden = document.createElement('input');
+    hidden.type = 'hidden';
+    hidden.name = 'ids[]';
+    hidden.value = id;
+    form.appendChild(hidden);
+  });
+
+  document.body.appendChild(form);
+  form.submit();
+});
 

@@ -41,7 +41,11 @@ Route::middleware(['auth', 'role:admin'])
         
         Route::patch('students/{student}/grade/{course}',
                 [\App\Http\Controllers\Admin\StudentController::class, 'saveGrade']
-            )->name('students.grade');   
+            )->name('students.grade');  
+        
+        Route::post('/students/bulk-action', [StudentController::class, 'bulkAction'])
+            ->name('students.bulk');
+
     });
 
 // BENAR

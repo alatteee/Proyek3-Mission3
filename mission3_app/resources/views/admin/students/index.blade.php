@@ -31,24 +31,43 @@
                   class="rounded-lg border border-gray-300 px-3 py-2 text-sm">
           </div>
         </div>
-
-
+        <div class="flex items-center gap-3 px-4 py-2">
+          <select id="bulkActionSelect" class="rounded-lg border border-gray-300 px-3 py-2 text-sm">
+            <option value="">Bulk Action</option>
+            <option value="delete">Delete Selected</option>
+            <option value="activate">Activate Selected</option>
+            <option value="deactivate">Deactivate Selected</option>
+          </select>
+          <button id="bulkActionApply"
+                  class="rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-500">
+            Apply
+          </button>
+        </div>
         <div class="overflow-x-auto">
           <table class="min-w-full text-sm">
             <thead class="bg-gray-50 text-gray-700">
               <tr>
+                <th class="px-4 py-3 text-center">
+                  <input type="checkbox" id="checkAllStudents"
+                        class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                </th>
                 <th class="px-4 py-3 text-left">NIM</th>
                 <th class="px-4 py-3 text-left">Username</th>
                 <th class="px-4 py-3 text-left">Full Name</th>
                 <th class="px-4 py-3 text-left">Entry Year</th>
                 <th class="px-4 py-3 text-left">Major</th>
                 <th class="px-4 py-3 text-left">Phone</th>
+                <th class="px-4 py-3 text-left">Status</th>
                 <th class="px-4 py-3 text-right">Actions</th>
               </tr>
             </thead>
             <tbody class="divide-y divide-gray-200 text-gray-800">
               @forelse($students as $s)
                 <tr class="hover:bg-gray-50">
+                  <td class="px-4 py-3 text-center">
+                    <input type="checkbox" class="student-check rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                          value="{{ $s->student_id }}">
+                  </td>
                   <td class="px-4 py-3 font-mono">{{ $s->nim }}</td>
                   <td class="px-4 py-3">{{ $s->user->username }}</td>
                   <td class="px-4 py-3">{{ $s->user->full_name }}</td>
@@ -56,6 +75,17 @@
                   <td class="px-4 py-3">{{ $s->major }}</td>
                   <td class="px-4 py-3">{{ $s->phone }}</td>
                   <td class="px-4 py-3">
+                      @if($s->user->is_active)
+                        <span class="inline-flex rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-semibold text-emerald-700">
+                          Active
+                        </span>
+                      @else
+                        <span class="inline-flex rounded-full bg-rose-100 px-2 py-0.5 text-xs font-semibold text-rose-700">
+                          Inactive
+                        </span>
+                      @endif
+                    </td>
+                    <td class="px-4 py-3">
                     <div class="flex justify-end gap-2">
                         <a href="{{ route('admin.students.show', $s) }}"
                             class="rounded-lg border border-gray-300 px-3 py-1.5 text-gray-700 hover:bg-gray-100">Detail</a>

@@ -216,6 +216,43 @@ class StudentController extends Controller
         };
     }
 
+    public function bulkAction(Request $request)
+    {
+        $data = $request->validate([
+            'action' => 'required|in:delete,activate,deactivate',
+            'ids'    => 'required|array',
+        ]);
 
+        $action = $data['action']; // ambil action sekali di awal
+        $students = Student::whereIn('student_id', $data['ids'])->get();
+
+        foreach ($students as $student) {
+            $user = $student->user;
+
+            if ($action === 'delete') {
+                $user->delete();
+                $student->delete();
+            } elseif ($action === 'activate') {
+                $user->is_active = 1;
+                $user->save();
+            } elseif ($action === 'deactivate') {
+                $user->is_active = 0;
+                $user->save();
+            }
+        }
+
+        // pesan dinamis sesuai action
+        if ($action === 'delete') {
+            return back()->with('ok', 'Selected students have been deleted.');
+        }
+        if ($action === 'activate') {
+            return back()->with('ok', 'Selected students have been activated.');
+        }
+        if ($action === 'deactivate') {
+            return back()->with('ok', 'Selected students have been deactivated.');
+        }
+
+        return back()->with('ok', 'Bulk action applied to selected students.');
+    }
 
 }

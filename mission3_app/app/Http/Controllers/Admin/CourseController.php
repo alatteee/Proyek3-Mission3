@@ -87,6 +87,23 @@ class CourseController extends Controller
 
         return view('admin.courses.show', compact('course', 'students'));
     }
+    
+    public function bulkEnroll(Request $request, Course $course)
+    {
+        $data = $request->validate([
+            'student_ids'   => ['required','array'],
+            'student_ids.*' => ['exists:students,student_id'],
+        ]);
+
+        $enrollData = collect($data['student_ids'])->mapWithKeys(fn($id) => [
+            $id => ['enroll_date' => now()]
+        ]);
+
+        $course->students()->syncWithoutDetaching($enrollData);
+
+        return back()->with('ok', count($data['student_ids']).' students enrolled to '.$course->course_name.'.');
+    }
+
 
     
 }

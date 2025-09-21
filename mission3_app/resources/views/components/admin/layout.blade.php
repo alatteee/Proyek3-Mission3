@@ -5,6 +5,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="csrf-token" content="{{ csrf_token() }}">
   <title>{{ $title }} — Admin</title>
   @vite(['resources/css/app.css','resources/js/app.js'])
 </head>
@@ -82,5 +83,20 @@
       </div>
     </div>
   </div>
+
+  <!-- Bulk Action Confirmation Modal -->
+  <div id="bulkModal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+    <div class="bg-white rounded-xl shadow-lg w-full max-w-md p-6">
+      <h2 class="text-lg font-semibold text-gray-800 mb-2">Konfirmasi Aksi</h2>
+      <p id="bulkMessage" class="text-gray-600 mb-6">Apakah kamu yakin?</p>
+      <div class="flex justify-end gap-3">
+        <button id="cancelBulkBtn" type="button"
+                class="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300">Batal</button>
+        <button id="okBulkBtn" type="button"
+                class="px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-500">Lanjutkan</button>
+      </div>
+    </div>
+  </div>
+
 </body>
 </html>
