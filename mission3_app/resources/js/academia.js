@@ -370,3 +370,10 @@ okBulkBtn?.addEventListener('click', () => {
   form.submit();
 });
 
+// ===== Bulk Enroll Available Students =====
+const checkAllAvailable = document.querySelector('#checkAllAvailable');
+const availableChecks = document.querySelectorAll('.available-check');
+
+checkAllAvailable?.addEventListener('change', e => {
+  availableChecks.forEach(chk => chk.checked = e.target.checked);
+});

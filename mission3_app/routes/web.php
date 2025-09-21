@@ -45,6 +45,10 @@ Route::middleware(['auth', 'role:admin'])
         
         Route::post('/students/bulk-action', [StudentController::class, 'bulkAction'])
             ->name('students.bulk');
+        
+        Route::post('/courses/{course}/bulk-enroll', [CourseController::class, 'bulkEnroll'])
+            ->name('courses.bulk-enroll');
+
 
     });
 

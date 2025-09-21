@@ -1,4 +1,10 @@
 <x-admin.layout :title="'Course Detail'">
+  {{-- Flash message --}}
+  @if(session('ok'))
+    <div class="mb-4 rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-green-700">
+      {{ session('ok') }}
+    </div>
+  @endif
   {{-- Card: Course Detail --}}
   <div class="rounded-2xl border border-gray-200 bg-white p-6 shadow-md">
     <div class="mb-6 flex items-center justify-between">
@@ -78,6 +84,56 @@
       <div class="mt-4">
         {{ $students->links() }}
       </div>
+    @endif
+  </div>
+
+
+  {{-- Card: Available Students (bulk enroll) --}}
+  <div class="mt-6 rounded-2xl border border-gray-200 bg-white p-6 shadow-md">
+    <h3 class="mb-4 text-lg font-semibold text-gray-800">
+      Available Students
+    </h3>
+
+    @if ($availableStudents->isEmpty())
+      <p class="text-gray-500">All students are already enrolled in this course.</p>
+    @else
+      <form method="POST" action="{{ route('admin.courses.bulk-enroll', $course) }}">
+        @csrf
+        <div class="overflow-x-auto">
+          <table class="min-w-full text-sm">
+            <thead class="bg-gray-50 text-gray-600">
+              <tr>
+                <th class="px-4 py-2 text-center">
+                  <input type="checkbox" id="checkAllAvailable"
+                        class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                </th>
+                <th class="px-4 py-2 text-left">NIM</th>
+                <th class="px-4 py-2 text-left">Name</th>
+                <th class="px-4 py-2 text-left">Major</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200">
+              @foreach ($availableStudents as $s)
+                <tr class="hover:bg-gray-50">
+                  <td class="px-4 py-2 text-center">
+                    <input type="checkbox" name="student_ids[]" value="{{ $s->student_id }}"
+                          class="available-check rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                  </td>
+                  <td class="px-4 py-2 font-mono">{{ $s->nim }}</td>
+                  <td class="px-4 py-2">{{ $s->user->full_name }}</td>
+                  <td class="px-4 py-2">{{ $s->major }}</td>
+                </tr>
+              @endforeach
+            </tbody>
+          </table>
+        </div>
+        <div class="mt-4">
+          <button type="submit"
+                  class="rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-500">
+            Enroll Selected
+          </button>
+        </div>
+      </form>
     @endif
   </div>
 </x-admin.layout>

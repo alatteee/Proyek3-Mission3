@@ -78,16 +78,24 @@ class CourseController extends Controller
 
     public function show(Course $course)
     {
-        // paginate di relasi many-to-many + bawa relasi user agar bisa tampilkan nama
+        // daftar student yg sudah ambil course ini
         $students = $course->students()
-            ->with('user')          // akses $s->user->full_name / email
+            ->with('user') // akses $s->user->full_name / email
             ->orderBy('student_id')         
             ->paginate(15)
             ->withQueryString();
 
-        return view('admin.courses.show', compact('course', 'students'));
+        // daftar student yg BELUM ambil course ini
+        $availableStudents = \App\Models\Student::with('user')
+            ->whereDoesntHave('courses', function($q) use ($course) {
+                $q->where('courses.id', $course->id);
+            })
+            ->orderBy('nim')
+            ->get();
+
+        return view('admin.courses.show', compact('course', 'students', 'availableStudents'));
     }
-    
+
     public function bulkEnroll(Request $request, Course $course)
     {
         $data = $request->validate([
