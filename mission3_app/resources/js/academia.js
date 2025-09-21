@@ -370,10 +370,52 @@ okBulkBtn?.addEventListener('click', () => {
   form.submit();
 });
 
+// ===== Bulk Enroll (Admin - Course Detail: pilih mahasiswa) =====
+(() => {
+  const form   = document.querySelector('#bulkEnrollForm');
+  const btn    = document.querySelector('#enrollSelectedBtn');
+  const modal  = document.querySelector('#enrollModal');
+  const msgEl  = document.querySelector('#enrollMessage');
+  const cancel = document.querySelector('#cancelEnrollBtn');
+  const ok     = document.querySelector('#okEnrollBtn');
+
+  if (!form || !btn || !modal || !msgEl) return;
+
+  btn.addEventListener('click', () => {
+    // cek apakah ini form student_ids[] (Course Detail)
+    const checked = form.querySelectorAll('input[name="student_ids[]"]:checked');
+    const checkedCourses = form.querySelectorAll('input[name="course_ids[]"]:checked');
+
+    // tentukan mana yg dipakai
+    const activeChecks = checked.length > 0 ? checked : checkedCourses;
+
+    if (activeChecks.length === 0) {
+      alert('Please select at least 1 item.');
+      return;
+    }
+
+    msgEl.textContent = `Are you sure you want to enroll ${activeChecks.length} ${checked.length > 0 ? 'student(s)' : 'course(s)'}?`;
+    modal.classList.remove('hidden');
+  });
+
+  cancel?.addEventListener('click', () => {
+    modal.classList.add('hidden');
+  });
+
+  ok?.addEventListener('click', () => {
+    modal.classList.add('hidden');
+    form.submit();
+  });
+})();
+
 // ===== Bulk Enroll Available Students =====
 const checkAllAvailable = document.querySelector('#checkAllAvailable');
-const availableChecks = document.querySelectorAll('.available-check');
+const availableChecks   = document.querySelectorAll('.available-check');
 
 checkAllAvailable?.addEventListener('change', e => {
-  availableChecks.forEach(chk => chk.checked = e.target.checked);
+  availableChecks.forEach(chk => {
+    chk.checked = e.target.checked;
+  });
 });
+
+

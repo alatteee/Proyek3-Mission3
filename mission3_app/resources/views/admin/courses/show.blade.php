@@ -97,7 +97,7 @@
     @if ($availableStudents->isEmpty())
       <p class="text-gray-500">All students are already enrolled in this course.</p>
     @else
-      <form method="POST" action="{{ route('admin.courses.bulk-enroll', $course) }}">
+      <form method="POST" id="bulkEnrollForm" action="{{ route('admin.courses.bulk-enroll', $course) }}">
         @csrf
         <div class="overflow-x-auto">
           <table class="min-w-full text-sm">
@@ -128,7 +128,7 @@
           </table>
         </div>
         <div class="mt-4">
-          <button type="submit"
+          <button type="button" id="enrollSelectedBtn"
                   class="rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-500">
             Enroll Selected
           </button>
@@ -136,4 +136,26 @@
       </form>
     @endif
   </div>
+
+  {{-- Modal Confirm --}}
+  <div id="enrollModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+    <div class="bg-white rounded-xl shadow-lg w-full max-w-md p-6">
+      <h3 class="text-lg font-semibold text-gray-800 mb-4">Confirm Enrollment</h3>
+      <p id="enrollMessage" class="text-gray-600 mb-6">
+        Are you sure you want to enroll selected courses for this student?
+      </p>
+      <div class="flex justify-end gap-3">
+        <button type="button" id="cancelEnrollBtn"
+                class="px-4 py-2 rounded-lg bg-gray-200 text-gray-700 hover:bg-gray-300">
+          Cancel
+        </button>
+        <button type="button" id="okEnrollBtn"
+                class="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-500">
+          Enroll
+        </button>
+      </div>
+    </div>
+
+
+
 </x-admin.layout>
