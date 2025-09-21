@@ -39,12 +39,14 @@
             <td class="px-4 py-3">
               <div class="flex justify-end">
                 <form method="post" action="{{ route('student.courses.drop',$c) }}"
-                      onsubmit="return confirm('Drop course ini?')">
-                  @csrf @method('DELETE')
-                  <button class="rounded-lg bg-rose-600 px-3 py-1.5 text-white hover:bg-rose-700">
-                    Drop
-                  </button>
-                </form>
+                    data-confirm
+                    data-name="{{ $c->course_name }}"
+                    data-sks="{{ $c->credits }}">
+                @csrf @method('DELETE')
+                <button class="rounded-lg bg-rose-600 px-3 py-1.5 text-white hover:bg-rose-700">
+                  Unenroll
+                </button>
+              </form>
               </div>
             </td>
           </tr>

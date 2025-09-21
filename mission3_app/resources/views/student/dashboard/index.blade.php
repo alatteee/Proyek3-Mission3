@@ -27,5 +27,12 @@
       </dl>
     </div>
   </div>
+
+    <button id="asyncDemoBtn"
+          class="mt-4 rounded-lg bg-indigo-600 px-4 py-2 text-white hover:bg-indigo-500">
+    Coba Async Demo
+  </button>
+  <div id="asyncResult" class="mt-2 text-slate-600"></div>
+
 </x-student.layout>
 

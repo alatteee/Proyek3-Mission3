@@ -19,14 +19,24 @@ class StudentController extends Controller
             ->when($q, function($query) use ($q) {
                 $query->whereHas('user', function($uq) use ($q){
                     $uq->where('username','like',"%$q%")
-                       ->orWhere('full_name','like',"%$q%");
+                    ->orWhere('full_name','like',"%$q%");
                 })->orWhere('nim','like',"%$q%");
             })
             ->orderBy('nim')
             ->paginate(10)
             ->withQueryString();
 
-        return view('admin.students.index', compact('students','q'));
+        // bikin array of objects untuk JS
+        $studentsData = $students->map(function($s){
+            return [
+                'id'    => $s->student_id,
+                'name'  => $s->full_name,
+                'nim'   => $s->nim,
+                'major' => $s->major,
+            ];
+        });
+
+        return view('admin.students.index', compact('students','q','studentsData'));
     }
 
     // FORM CREATE

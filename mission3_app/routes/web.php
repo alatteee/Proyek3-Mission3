@@ -53,6 +53,7 @@ Route::middleware(['auth','role:student'])
         Route::post('/courses/{course}/enroll', [StuCourse::class, 'enroll'])->name('courses.enroll');
         Route::get('/my-courses', [StuCourse::class, 'mine'])->name('courses.mine');
         Route::delete('/my-courses/{course}', [StuCourse::class, 'drop'])->name('courses.drop');
+        Route::post('/courses/bulk-enroll', [StuCourse::class, 'bulkEnroll'])->name('courses.bulk-enroll');
     });
 
 

@@ -1,5 +1,5 @@
 <x-admin.layout title="Edit Student">
-  <form method="POST" action="{{ route('admin.students.update', $student) }}" class="max-w-3xl">
+  <form method="POST" action="{{ route('admin.students.update', $student) }}" class="max-w-3xl" data-validate novalidate>
     @csrf
     @method('PUT')
 

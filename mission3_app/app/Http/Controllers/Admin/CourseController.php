@@ -8,12 +8,24 @@ use Illuminate\Http\Request;
 
 class CourseController extends Controller
 {
-    // LIST
     public function index()
     {
         $courses = Course::orderBy('course_code')->paginate(10);
-        return view('admin.courses.index', compact('courses'));
+
+        // siapkan array of objects untuk JS
+        $coursesData = $courses->map(function($c){
+            return [
+                'id'    => $c->id,
+                'code'  => $c->course_code,
+                'name'  => $c->course_name,
+                'sks'   => $c->credits,
+                'sem'   => $c->semester,
+            ];
+        });
+
+        return view('admin.courses.index', compact('courses','coursesData'));
     }
+
 
     // FORM CREATE
     public function create()

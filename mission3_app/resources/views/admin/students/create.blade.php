@@ -1,5 +1,5 @@
 <x-admin.layout title="Add Student">
-  <form method="POST" action="{{ route('admin.students.store') }}" class="max-w-3xl">
+  <form method="POST" action="{{ route('admin.students.store') }}" class="max-w-3xl" data-validate novalidate>
     @csrf
 
     <x-admin.form-card title="Account" subtitle="Data akun untuk login.">

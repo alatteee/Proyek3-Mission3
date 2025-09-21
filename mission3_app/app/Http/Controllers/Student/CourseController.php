@@ -36,7 +36,30 @@ class CourseController extends Controller
                 ->keyBy('id')
             : collect();
 
-        return view('student.courses.index', compact('courses','q','my','enrolledIds'));
+        $student = $request->user()->student;
+
+        return view('student.courses.index', [
+            'courses'     => $courses,
+            'q'           => $q,
+            'my'          => $my,
+            'enrolledIds' => $enrolledIds,
+            'studentData' => [
+                'id'    => $student->student_id,
+                'name'  => $student->full_name,
+                'nim'   => $student->nim,
+                'major' => $student->major,
+            ],
+            'coursesData' => $courses->map(function($c){
+                return [
+                    'id'    => $c->id,
+                    'code'  => $c->course_code,
+                    'name'  => $c->course_name,
+                    'sks'   => $c->credits,
+                    'sem'   => $c->semester,
+                ];
+            })
+        ]);
+
     }
 
 
@@ -80,4 +103,31 @@ class CourseController extends Controller
 
         return back()->with('ok', 'Course berhasil di-drop.');
     }
+    
+    public function bulkEnroll(Request $request)
+    {
+        $student = $request->user()->student;
+
+        // pastikan student ada
+        abort_unless($student, 403);
+
+        $data = $request->validate([
+            'course_ids'   => ['required','array'],
+            'course_ids.*' => ['exists:courses,id'],
+        ]);
+
+        // map course_id => data pivot (enroll_date)
+        $enrollData = collect($data['course_ids'])->mapWithKeys(function($id){
+            return [$id => ['enroll_date' => now()]];
+        });
+
+        // enroll semua course yang dipilih
+        $student->courses()->syncWithoutDetaching($enrollData);
+
+        return redirect()
+            ->route('student.courses.index')
+            ->with('ok', 'Berhasil enroll '.count($data['course_ids']).' course.');
+    }
+
+
 }

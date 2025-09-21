@@ -13,13 +13,25 @@
       <div class="rounded-2xl border border-gray-200 bg-white shadow-md">
         <div class="flex items-center justify-between p-4">
           <a href="{{ route('admin.students.create') }}"
-             class="rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-500">+ New Student</a>
+            class="rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-500">+ New Student</a>
 
-          <form method="get">
-            <input name="q" value="{{ $q }}"
-                   placeholder="Search username/name/NIM…" class="rounded-lg border border-gray-300 px-3 py-2 text-sm">
-          </form>
+          <div class="flex items-center gap-3">
+            <!-- Dropdown filter major -->
+            <select id="filterMajor" class="rounded-lg border border-gray-300 px-3 py-2 text-sm">
+              <option value="">All Majors</option>
+              <option value="Informatika">Informatika</option>
+              <option value="Sistem Informasi">Sistem Informasi</option>
+              <option value="Manajemen">Manajemen</option>
+              <option value="Akuntansi">Akuntansi</option>
+            </select>
+
+            <!-- Search box -->
+            <input id="searchInput" type="text" 
+                  placeholder="Search" 
+                  class="rounded-lg border border-gray-300 px-3 py-2 text-sm">
+          </div>
         </div>
+
 
         <div class="overflow-x-auto">
           <table class="min-w-full text-sm">
@@ -51,7 +63,9 @@
                       <a href="{{ route('admin.students.edit', $s) }}"
                          class="rounded-lg border border-gray-300 px-3 py-1.5 text-gray-700 hover:bg-gray-100">Edit</a>
                       <form method="post" action="{{ route('admin.students.destroy', $s) }}"
-                            onsubmit="return confirm('Hapus student ini?')">
+                            data-confirm
+                            data-name="{{ $s->user->full_name }}"
+                            data-nim="{{ $s->nim }}">
                         @csrf @method('DELETE')
                         <button class="rounded-lg bg-red-600 px-3 py-1.5 text-white hover:bg-red-500">Delete</button>
                       </form>
@@ -69,4 +83,9 @@
       </div>
     </main>
   </div>
+  <script>
+    window.studentsData = @json($studentsData);
+    console.log("Students (Admin):", window.studentsData);
+  </script>
+
 </x-admin.layout>

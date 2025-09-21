@@ -1,5 +1,5 @@
 <x-admin.layout title="Add New Course">
-  <form method="POST" action="{{ route('admin.courses.store') }}" class="max-w-3xl">
+  <form method="POST" action="{{ route('admin.courses.store') }}" class="max-w-3xl" data-validate novalidate>
     @csrf
     <x-admin.form-card title="Course Details" subtitle="Lengkapi informasi mata kuliah.">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-5">

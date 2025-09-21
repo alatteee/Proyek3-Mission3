@@ -8,11 +8,11 @@
   <title>{{ $title }} — Admin</title>
   @vite(['resources/css/app.css','resources/js/app.js'])
 </head>
-<body class="bg-slate-50 text-slate-800">
+<body class="bg-slate-50 text-slate-800 dark:bg-slate-900 dark:text-slate-100">
   <div class="min-h-screen flex">
 
     {{-- SIDEBAR: layout yang pegang aside --}}
-    <aside class="hidden md:block w-64 shrink-0 bg-white border-r border-slate-200">
+    <aside class="hidden md:block w-64 shrink-0 bg-white border-r border-slate-200 dark:bg-slate-800 dark:border-slate-700">
       <div class="flex items-center gap-3 px-4 py-4">
         <span class="font-bold text-2xl text-indigo-600">Academia</span>
       </div>
@@ -32,12 +32,15 @@
               </p>
               <p class="text-sm text-slate-500 capitalize">{{ auth()->user()->role ?? 'admin' }}</p>
             </div>
-            <form method="POST" action="{{ route('logout') }}">
+            <form id="logoutForm" method="POST" action="{{ route('logout') }}">
               @csrf
-              <button class="rounded-lg bg-red-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-red-500">
+              <button type="button"
+                      id="logoutBtn"
+                      class="rounded-lg bg-red-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-red-500">
                 Logout
               </button>
             </form>
+
           </div>
         </div>
       </header>
@@ -46,6 +49,38 @@
         {{ $slot }}
       </div>
     </main>
+  </div>
+
+  <!-- Delete Confirmation Modal -->
+  <div id="confirmModal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+    <div class="bg-white rounded-xl shadow-lg w-full max-w-md p-6">
+      <h2 class="text-lg font-semibold text-gray-800 mb-2">Konfirmasi Hapus</h2>
+      <p id="confirmMessage" class="text-gray-600 mb-6">Apakah kamu yakin?</p>
+      <div class="flex justify-end gap-3">
+        <button id="cancelBtn" class="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300">Batal</button>
+        <button id="okBtn" class="px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-500">Hapus</button>
+      </div>
+    </div>
+  </div>
+
+    <!-- Logout Confirmation Modal -->
+  <div id="logoutModal"
+      class="hidden fixed inset-0 flex items-center justify-center bg-black/50 z-50">
+    <div class="bg-white rounded-xl shadow-lg max-w-md w-full p-6">
+      <h2 class="text-lg font-semibold mb-3">Logout Confirmation</h2>
+      <p class="text-slate-600">Are you sure want to logout?</p>
+
+      <div class="mt-6 flex justify-end gap-3">
+        <button id="cancelLogoutBtn"
+                class="px-4 py-2 rounded-lg bg-gray-200 text-gray-700 hover:bg-gray-300">
+          Cancel
+        </button>
+        <button id="confirmLogoutBtn"
+                class="px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-500">
+          Logout
+        </button>
+      </div>
+    </div>
   </div>
 </body>
 </html>

@@ -7,14 +7,24 @@
 
   <div class="rounded-2xl border border-gray-200 bg-white shadow-md">
     <div class="flex items-center justify-between p-4">
-      <a href="{{ route('admin.courses.create') }}"
-         class="rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-500">+ New Course</a>
+        <a href="{{ route('admin.courses.create') }}"
+          class="rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-500">+ New Course</a>
 
-      <form method="get" class="hidden md:block">
-        <input name="q" value="{{ request('q') }}" placeholder="Search courses..."
-               class="rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none">
-      </form>
-    </div>
+        <div class="flex items-center gap-3">
+          <!-- Dropdown filter semester -->
+          <select id="filterSemester" class="rounded-lg border border-gray-300 px-3 py-2 text-sm">
+            <option value="">All Semesters</option>
+            <option value="Ganjil">Ganjil</option>
+            <option value="Genap">Genap</option>
+          </select>
+
+          <!-- Search box -->
+          <input id="searchCourseInput" type="text" 
+                placeholder="Search code/name…" 
+                class="rounded-lg border border-gray-300 px-3 py-2 text-sm">
+        </div>
+      </div>
+
 
     <div class="overflow-x-auto">
       <table class="min-w-full text-sm">
@@ -45,10 +55,12 @@
                    class="rounded-lg border border-gray-300 px-3 py-1.5 text-gray-700 hover:bg-gray-100">Edit</a>
 
                 <form method="post" action="{{ route('admin.courses.destroy',$c) }}"
-                      onsubmit="return confirm('Hapus course ini?')">
-                  @csrf @method('DELETE')
-                  <button class="rounded-lg bg-red-600 px-3 py-1.5 text-white hover:bg-red-500">Delete</button>
-                </form>
+                    data-confirm
+                    data-name="{{ $c->course_name }}"
+                    data-sks="{{ $c->credits }}">
+                @csrf @method('DELETE')
+                <button class="rounded-lg bg-red-600 px-3 py-1.5 text-white hover:bg-red-500">Delete</button>
+              </form>
               </div>
             </td>
           </tr>
@@ -63,4 +75,9 @@
 
     <div class="p-4">{{ $courses->links() }}</div>
   </div>
+  <script>
+    window.coursesData = @json($coursesData);
+    console.log("Courses (Admin):", window.coursesData);
+  </script>
+
 </x-admin.layout>
