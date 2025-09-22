@@ -19,6 +19,7 @@
     
     {{-- Students per Major --}}
     <div class="rounded-2xl border border-gray-200 bg-white p-6 shadow-md flex justify-center">
+      <h2 class="2xl">Students per Major </h2>
       <div class="w-full max-w-sm h-64">
         <canvas id="majorsChart"></canvas>
       </div>
