@@ -12,19 +12,24 @@
 <body class="bg-slate-50 text-slate-800 antialiased dark:bg-slate-900 dark:text-slate-100">
   <div class="min-h-screen flex">
 
-    <aside class="hidden md:block w-64 shrink-0 bg-white border-r border-slate-200 dark:bg-slate-800 dark:border-slate-700">
-      <div class="flex items-center gap-3 px-4 py-4">
+    {{-- SIDEBAR --}}
+    <aside class="fixed left-0 top-0 h-screen w-64 bg-white border-r border-slate-200 dark:bg-slate-800 dark:border-slate-700 flex flex-col">
+      {{-- Logo --}}
+      <div class="flex items-center gap-3 px-4 py-4 border-b border-slate-200 dark:border-slate-700">
         <img src="https://cdn-icons-png.flaticon.com/512/3135/3135755.png" 
             alt="Logo" 
             class="h-8 w-8 object-contain">
         <span class="font-bold text-2xl text-emerald-600">Academia</span>
       </div>
 
-      @include('student.partials.sidebar-inner') 
+      {{-- menu --}}
+      <div class="flex-1 overflow-y-auto">
+        @include('student.partials.sidebar-inner') 
+      </div>
     </aside>
 
-
-    <main class="flex-1">
+    {{-- MAIN --}}
+    <main class="ml-64 flex-1">
       <header class="sticky top-0 z-10 bg-white/80 backdrop-blur border-b border-slate-200">
         <div class="h-16 max-w-6xl mx-auto px-4 flex items-center w-full">
           <h1 class="text-lg font-semibold">{{ $title }}</h1>
@@ -42,7 +47,6 @@
                 Logout
               </button>
             </form>
-
           </div>
         </div>
       </header>

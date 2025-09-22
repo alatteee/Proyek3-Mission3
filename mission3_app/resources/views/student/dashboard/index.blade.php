@@ -79,8 +79,12 @@
             datasets: [{
               data: Object.values(gradesData),
               backgroundColor: [
-                '#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'
-              ],
+                  '#93c5fd', // soft blue (A)
+                  '#6ee7b7', // soft green (AB)
+                  '#fde68a', // soft amber/yellow (B)
+                  '#fca5a5', // soft red (BC)
+                  '#d8b4fe'  // soft purple (cadangan kalau ada grade lain)
+                ],
             }]
           },
           options: {
