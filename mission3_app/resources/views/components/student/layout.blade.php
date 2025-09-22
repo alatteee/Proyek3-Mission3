@@ -12,14 +12,17 @@
 <body class="bg-slate-50 text-slate-800 antialiased dark:bg-slate-900 dark:text-slate-100">
   <div class="min-h-screen flex">
 
-    {{-- SIDEBAR: layout yang pegang aside --}}
     <aside class="hidden md:block w-64 shrink-0 bg-white border-r border-slate-200 dark:bg-slate-800 dark:border-slate-700">
       <div class="flex items-center gap-3 px-4 py-4">
+        <img src="https://cdn-icons-png.flaticon.com/512/3135/3135755.png" 
+            alt="Logo" 
+            class="h-8 w-8 object-contain">
         <span class="font-bold text-2xl text-emerald-600">Academia</span>
       </div>
 
       @include('student.partials.sidebar-inner') 
     </aside>
+
 
     <main class="flex-1">
       <header class="sticky top-0 z-10 bg-white/80 backdrop-blur border-b border-slate-200">
